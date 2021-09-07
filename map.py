@@ -1,5 +1,6 @@
 from typing import Tuple,Set
 
+Position = Tuple[int,int]
 
 class Map:
 
@@ -33,8 +34,18 @@ class Map:
         
         return True
     
-    def free_fields(self) -> Set[Tuple[int,int]]:
+    def free_fields(self) -> Set[Position]:
         return {(r,c) for r,row in enumerate(self._map) for c,field in enumerate(row) if field==self.FREE}
+
+
+    def is_valid_position(self, position:Position) -> bool:
+        return 0<=position[0]<self.height and 0<=position[1]<self.width
+
+    def get_field(self,position:Position) -> str:
+        if not self.is_valid_position(position): raise ValueError
+        return self._map[position[0]][position[1]]
+
+
 
 
         

@@ -10,3 +10,8 @@ except ValueError:
     print(f"{filename} does not contain a valid map.")
 
 print("Free fields: ", test_map.free_fields())
+
+for r in range(test_map.height):
+    for c in range(test_map.width):
+        print(test_map.get_field((r,c)), end='')
+    print()
