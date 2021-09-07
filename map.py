@@ -1,4 +1,4 @@
-from typing import Tuple,List
+from typing import Tuple,Set
 
 
 class Map:
@@ -9,9 +9,7 @@ class Map:
 
     def __init__(self, filename:str) -> None:
         file = open(filename)
-        self._map = []
-        for row in file:
-            self._map.append(row.rstrip())
+        self._map=tuple(row.rstrip() for row in file)
         file.close()
         if not self.is_valid():
             raise ValueError
@@ -35,8 +33,8 @@ class Map:
         
         return True
     
-    def free_fields(self) -> List[Tuple[int,int]]:
-        return [(r,c) for r,row in enumerate(self._map) for c,field in enumerate(row) if field==self.FREE]
+    def free_fields(self) -> Set[Tuple[int,int]]:
+        return {(r,c) for r,row in enumerate(self._map) for c,field in enumerate(row) if field==self.FREE}
 
 
         
