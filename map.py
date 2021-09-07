@@ -1,3 +1,6 @@
+from typing import Tuple,List
+
+
 class Map:
 
     FREE = " "
@@ -15,13 +18,13 @@ class Map:
     
     def is_valid(self) -> bool:
         # check for empty map
-        height=len(self._map)
-        if height==0: return False        
+        self.height=len(self._map)
+        if self.height==0: return False        
         
         # check for non-rectangle maps
-        width=len(self._map[0])
+        self.width=len(self._map[0])
         for row in self._map:
-            if len(row) != width: return False 
+            if len(row) != self.width: return False 
         symbols = {c for row in self._map for c in row}
 
         # check for foreign symbols
@@ -31,6 +34,9 @@ class Map:
             if row[0] == self.FREE or row[-1] == self.FREE: return False
         
         return True
+    
+    def free_fields(self) -> List[Tuple[int,int]]:
+        return [(r,c) for r,row in enumerate(self._map) for c,field in enumerate(row) if field==self.FREE]
 
 
         

@@ -8,3 +8,5 @@ except OSError:
     print(f"File {filename} does not exist.")
 except ValueError:
     print(f"{filename} does not contain a valid map.")
+
+print("Free fields: ", test_map.free_fields())
