@@ -7,4 +7,3 @@ class VV_1(Actor):
             if self.can_move('forward'): self.move('forward')
             else: self.move('left')   
 
-VV_ACTORS = ( VV_1 )

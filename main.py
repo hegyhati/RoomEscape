@@ -3,45 +3,48 @@ from os.path import join
 from map import Map
 from actors_vasvill  import *
 
-filename=join("maps","vasvill.txt")
-try:
-    test_map = Map(filename)
-except OSError:
-    print(f"File {filename} does not exist.")
-except ValueError:
-    print(f"{filename} does not contain a valid map.")
-
-print("Free fields: ", test_map.free_fields())
-
-for r in range(test_map.height):
-    for c in range(test_map.width):
-        print(test_map.get_field((r,c)), end='')
-    print()
-
-
-test_actor = VV_1()
-test_actor.set_map(test_map)
-
-
 
 SUCCESSFUL = "W"
 STOPPED = "S"
 DIED = "D"
 INFINITE = "I"
+test_map_names=["vasvill_01","vasvill_02"]
+test_actos =[ VV_1() ]
 
-results = {}
-for start in test_map.free_fields():
+
+
+
+# Open maps
+maps={}
+for map_name in test_map_names:
+    filename=join("maps",f"{map_name}.txt")
     try:
-        test_actor.set_position(start)
-        test_actor.run()
-        results[start] = SUCCESSFUL if test_actor.is_out() else STOPPED
-    except InfiniteLoop:
-        results[start] = INFINITE
-    except DeadActor:
-        results[start] = DIED
+        maps[map_name]=Map(filename)
+    except OSError:
+        print(f"File {filename} does not exist.")
+    except ValueError:
+        print(f"{filename} does not contain a valid map.")
 
-for r in range(test_map.height):
-    for c in range(test_map.width):
-        field = test_map.get_field((r,c))
-        print("█" if field==Map.OBSTACLE else " " if field==Map.GOAL else results[(r,c)], end='')
-    print()
+
+for actor in test_actos:
+    print(f"Actor {actor.__class__.__name__}")
+    for mapname,map in maps.items():
+        print(f" Map {mapname}")
+        actor.set_map(map)
+        results = {}
+        for start in map.free_fields():
+            try:
+                actor.set_position(start)
+                actor.run()
+                results[start] = SUCCESSFUL if actor.is_out() else STOPPED
+            except InfiniteLoop:
+                results[start] = INFINITE
+            except DeadActor:
+                results[start] = DIED
+
+        for r in range(map.height):
+            print("  ", end="")
+            for c in range(map.width):
+                field = map.get_field((r,c))
+                print("█" if field==Map.OBSTACLE else " " if field==Map.GOAL else results[(r,c)], end='')
+            print()
