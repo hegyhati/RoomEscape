@@ -3,6 +3,9 @@ from map import Map, Position
 class DeadActor(Exception):
     pass
 
+class InfiniteLoop(Exception):
+    pass
+
 class Actor:
 
     MOVES = {
@@ -19,9 +22,12 @@ class Actor:
     def set_map(self,map:Map):
         self.map=map
     
-    def set_position(self,position:Position):
+    def set_position(self,position:Position, pathreset:bool=True):
         if self.map.get_field(position) in {Map.FREE,Map.GOAL}:
             self.position=position 
+            if pathreset: self.path=[]
+            self.path.append(position)
+            if self.path.count(position)!=1: raise InfiniteLoop
         else: 
             raise DeadActor
 
@@ -37,8 +43,14 @@ class Actor:
     
     def move(self, direction: str) -> None:
         if self.is_alive():
-            self.set_position(self._neighbor_index(direction))
+            self.set_position(self._neighbor_index(direction), pathreset=False)
     
     def can_move(self, direction:str) -> bool:
         return self.is_alive() and self.map.get_field(self._neighbor_index(direction)) == Map.FREE
-        
+    
+    def run(self):
+        pass
+
+
+
+    
