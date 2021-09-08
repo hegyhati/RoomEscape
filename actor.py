@@ -1,12 +1,19 @@
 from map import Map, Position
+import signal
+
 
 
 class DeadActor(Exception):
     pass
 
 
-class InfiniteLoop(Exception):
+class StarvedActor(Exception):
     pass
+
+def handle_sigalrm(signum,frame):
+    raise StarvedActor
+
+signal.signal(signal.SIGALRM, handle_sigalrm)
 
 
 class Actor:
@@ -25,8 +32,6 @@ class Actor:
             if pathreset:
                 self.path = []
             self.path.append(position)
-            if self.path.count(position) != 1:
-                raise InfiniteLoop
         else:
             raise DeadActor
 
@@ -56,3 +61,9 @@ class Actor:
 
     def run(self):
         pass
+
+    def safe_run(self, timeout=1):
+        signal.alarm(timeout)
+        self.run()
+        signal.alarm(0)
+        

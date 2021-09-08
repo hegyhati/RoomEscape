@@ -1,4 +1,5 @@
-from actor import DeadActor, InfiniteLoop
+from actor import DeadActor, StarvedActor
+from os import listdir
 from os.path import join
 from map import Map
 from actors_vasvill import *
@@ -7,15 +8,16 @@ from actors_vasvill import *
 SUCCESSFUL = "W"
 STOPPED = "S"
 DIED = "D"
-INFINITE = "I"
-test_map_names = ["vasvill_01", "vasvill_02"]
-test_actors = [VVA_1(),VVA_2()]
+TIMEOUT = "T"
+test_map_names = [filename for filename in listdir("maps/")]
+test_map_names.sort()
+test_actors = [VVA_1(),VVA_2(),VVA_3(),VVA_4()]
 
 
 # Open maps
 maps = {}
 for map_name in test_map_names:
-    filename = join("maps", f"{map_name}.txt")
+    filename = join("maps", map_name)
     try:
         maps[map_name] = Map(filename)
     except OSError:
@@ -33,10 +35,10 @@ for actor in test_actors:
         for start in map.free_fields():
             try:
                 actor.set_position(start)
-                actor.run()
+                actor.safe_run()
                 results[start] = SUCCESSFUL if actor.is_out() else STOPPED
-            except InfiniteLoop:
-                results[start] = INFINITE
+            except StarvedActor:
+                results[start] = TIMEOUT
             except DeadActor:
                 results[start] = DIED
 
