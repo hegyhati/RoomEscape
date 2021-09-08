@@ -51,7 +51,7 @@ class Actor:
     def can_move(self, direction: str) -> bool:
         return (
             self.is_alive()
-            and self.map.get_field(self._neighbor_index(direction)) == Map.FREE
+            and self.map.get_field(self._neighbor_index(direction)) in {Map.FREE, Map.GOAL}
         )
 
     def run(self):

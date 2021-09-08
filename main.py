@@ -9,7 +9,7 @@ STOPPED = "S"
 DIED = "D"
 INFINITE = "I"
 test_map_names = ["vasvill_01", "vasvill_02"]
-test_actors = [VV_1()]
+test_actors = [VVA_1(),VVA_2()]
 
 
 # Open maps
